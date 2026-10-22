@@ -38,11 +38,12 @@ html,body{margin:0;background:var(--bg);color:var(--ink);
 button{font:inherit;color:inherit}
 .top{background:linear-gradient(135deg,#ea5a92 0%,#c04aa8 60%,#8d4bc0 100%);color:#fff;padding:18px 16px 16px}
 .top-row{max-width:640px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.eyebrow{font-size:12px;letter-spacing:.08em;opacity:.9;font-weight:600}
+.eyebrow{font-size:clamp(9.5px,2.7vw,12px);letter-spacing:.04em;opacity:.9;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-row > div:first-child{min-width:0}
 .top h1{margin:2px 0 0;font-size:24px;line-height:1.2}
 .top .sub{font-size:13px;opacity:.9;margin-top:2px}
-.hbtns{display:flex;gap:8px;flex:none}
-.icon-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);
+.hbtns{display:flex;gap:6px;flex:none}
+.icon-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);
   background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:18px;font-style:italic;font-family:Georgia,serif;cursor:pointer}
 .icon-btn.lang{font-style:normal;font-family:inherit;font-size:14px}
 
@@ -256,6 +257,27 @@ textarea.ta{width:100%;min-height:150px;border:1px solid var(--line);border-radi
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.up{bottom:auto;top:calc(16px + env(safe-area-inset-top));transform:translate(-50%,-30px)}
 .toast.up.show{transform:translate(-50%,0)}
+/* side-by-side view: compact cards in a grid (3 across on most phones) */
+.icon-btn svg{display:block;margin:auto}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(106px,1fr));gap:6px;margin:8px 0}
+.mini{position:relative;display:flex;min-height:116px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--rc);
+  border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.mini.ev{background:var(--bg2)}
+.mini.p1{background:var(--p1bg);border-color:var(--p1);border-top-color:var(--rc)}
+.mini.p2{background:var(--p2bg);border:2px solid var(--p2);border-top:4px solid var(--rc)}
+.mini.p3{background:var(--p3bg);border:2px solid var(--p3);border-top:4px solid var(--rc);box-shadow:0 0 0 2px color-mix(in srgb,var(--p3) 18%,transparent)}
+.mmain{flex:1;min-width:0;border:0;background:none;text-align:start;padding:6px 7px 7px;display:flex;flex-direction:column;gap:2px;cursor:pointer;color:inherit}
+.mroom{font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--rc);padding-inline-end:30px;line-height:1.35}
+.mroom b{display:block;color:var(--ink);letter-spacing:0;font-size:11.5px}
+.mtitle{font-size:13px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.mby{font-size:11px;line-height:1.3;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.micons{margin-top:auto;padding-top:4px;font-size:11px;white-space:nowrap;overflow:hidden}
+.micons .lv{letter-spacing:-2px;margin-inline-end:3px}
+.mstar{position:absolute;top:1px;inset-inline-end:1px;border:0;background:none;cursor:pointer;font-size:18px;line-height:1;padding:4px 5px;color:var(--muted);opacity:.6}
+.mstar.p1,.mstar.p2,.mstar.p3{opacity:1;font-size:11px;letter-spacing:-1px;padding-top:6px}
+.mstar.p1{color:var(--p1)} .mstar.p2{color:var(--p2)} .mstar.p3{color:var(--p3)}
+.clashbox .cgrid{margin:8px 0 6px}
+
 /* full-day poster */
 .pvbtn{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 0;padding:10px 12px;border-radius:12px;cursor:pointer;
   border:1px solid var(--line);background:var(--card);text-align:start;font-size:14px;font-weight:700;color:var(--ink)}
@@ -298,6 +320,7 @@ textarea.ta{width:100%;min-height:150px;border:1px solid var(--line);border-radi
       <div class="sub"><span id="hPlace">פארק הירדן</span> · <span dir="ltr">22–24.10.2026</span></div>
     </div>
     <div class="hbtns">
+      <button class="icon-btn lang" id="viewBtn" data-act="view"></button>
       <button class="icon-btn lang" id="langBtn" data-act="lang">EN</button>
       <button class="icon-btn" id="infoBtn" data-act="info" aria-label="מקרא ומידע">i</button>
     </div>
@@ -484,6 +507,7 @@ he:{
   a2hsIOS:"כך היא תיפתח כמו אפליקציה ותעבוד גם בלי קליטה בפארק. בספארי: כפתור השיתוף ⬆️ ← ״הוספה למסך הבית״. שימו לב: המועדפים באייקון נשמרים בנפרד מספארי, אז כדאי לסמן אותם מתוך האייקון.",
   a2hsAndroid:"כך היא תיפתח כמו אפליקציה ותעבוד גם בלי קליטה בפארק. בכרום: תפריט ⋮ ← ״הוספה למסך הבית״ או ״התקנת אפליקציה״.",
   install:"התקנה", shareOpen:"התוכנייה:",
+  viewToGrid:"תצוגה זו לצד זו", viewToList:"תצוגת רשימה", viewNowGrid:"▦ הסדנאות זו לצד זו", viewNowList:"☰ הסדנאות ברשימה",
   posterBtn:d=>`הלוח המלא של יום ${d}`, posterSub:"כל הצ׳אקרות והשעות זו לצד זו, כמו בתוכנייה המקורית",
   posterHint:"הקישו על הלוח כדי להגדיל, ושוב כדי להקטין", posterAlt:d=>`לוח הסדנאות של יום ${d}`,
   mapTab:"🗺️ מפה", mapSub:"מתחמים", mapAlt:"מפת הפסטיבל", toMap:"במפה",
@@ -545,6 +569,7 @@ en:{
   a2hsIOS:"It will open like an app and work without reception at the park. In Safari: Share ⬆️ → “Add to Home Screen”. Note: favorites in the home-screen icon are saved separately from Safari, so mark them from the icon.",
   a2hsAndroid:"It will open like an app and work without reception at the park. In Chrome: menu ⋮ → “Add to Home screen” or “Install app”.",
   install:"Install", shareOpen:"Schedule:",
+  viewToGrid:"Side-by-side view", viewToList:"List view", viewNowGrid:"▦ Workshops side by side", viewNowList:"☰ Workshops as a list",
   posterBtn:d=>`Full ${d} poster`, posterSub:"All chakras and times side by side, as in the original schedule",
   posterHint:"Tap the poster to zoom in, tap again to zoom out", posterAlt:d=>`${d} workshop poster`,
   mapTab:"🗺️ Map", mapSub:"Areas", mapAlt:"Festival map", toMap:"on map",
@@ -1019,6 +1044,7 @@ let tab = store.get(LS.tab, "thu");
 let lang = store.get(LS.lang, "he") === "en" ? "en" : "he";
 let mapRoom = MAP_PTS[store.get(LS.mapRoom, "")] ? store.get(LS.mapRoom, "") : "";
 let mapFavOnly = store.get(LS.mapFav, false) === true;
+let viewMode = store.get("lv19_view", "list") === "grid" ? "grid" : "list";   // site-wide: list or side by side
 let T = I[lang];
 let openId = null;
 
@@ -1125,6 +1151,13 @@ function renderHeader(){
   $("#langBtn").textContent = T.langBtn;
   $("#langBtn").setAttribute("aria-label", T.langAria);
   $("#infoBtn").setAttribute("aria-label", T.infoAria);
+  // the button shows the view you'll switch to
+  const toGrid = viewMode === "list";
+  $("#viewBtn").innerHTML = toGrid
+    ? `<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="7" height="7" rx="1.6"/><rect x="10" y="1" width="7" height="7" rx="1.6"/><rect x="1" y="10" width="7" height="7" rx="1.6"/><rect x="10" y="10" width="7" height="7" rx="1.6"/></svg>`
+    : `<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><rect x="1" y="2" width="16" height="3" rx="1.5"/><rect x="1" y="7.5" width="16" height="3" rx="1.5"/><rect x="1" y="13" width="16" height="3" rx="1.5"/></svg>`;
+  $("#viewBtn").setAttribute("aria-label", toGrid ? T.viewToGrid : T.viewToList);
+  $("#viewBtn").title = toGrid ? T.viewToGrid : T.viewToList;
 }
 function renderTabs(){
   let h = DAYS.map(d => `<button class="tab${tab===d.id?" on":""}" data-tab="${d.id}"><b>${lang==="he"?d.he:d.enS}</b><small>${d.date}</small></button>`).join("");
@@ -1144,6 +1177,39 @@ function renderFilters(){
     + `<button class="chip ${filt.noCouples?"on":""}" data-act="nocouples" aria-pressed="${filt.noCouples}">${T.noCouples}</button>`;
 }
 
+/* ---------- side-by-side view ---------- */
+const SHORT_ROOM = {base:"BASE", sex:"SEX", solar:"SOLAR", heart:"HEART", throat:"THROAT", third:"3RD EYE", crown:"CROWN"};
+const ENTRY_ICON = {all:"🧚‍♀️", balance:"🫶", couples:"🫂", trio:"🔺"};
+const CLASH_ICON = {first:"✅", tie:"⚠️", backup:"↩︎"};
+function miniHtml(w, opt){
+  opt = opt || {};
+  const p = lvl(w.id), by = F(w, "by");
+  const ci = opt.rank !== false ? clashInfo(w) : null;
+  const room = w.r === "main" ? (w.at ? w.at.replace(/ Chakra/i, "").toUpperCase() : T.whole) : SHORT_ROOM[w.r];
+  const icons = `<span class="lv">${chili(w.l)}</span>`
+    + (w.r !== "main" ? `<span title="${esc(T.entry[w.e].s)}">${ENTRY_ICON[w.e]}</span>` : "")
+    + (w.emo ? "💦" : "") + (w.tem ? "🏯" : "") + (ci ? " " + CLASH_ICON[ci.status] : "");
+  const aria = p ? `${stars(p)} ${T.pl[p]}` : "☆";
+  return `<article class="mini${p ? " p" + p : ""}${w.r === "main" ? " ev" : ""}" style="--rc:${ROOMS[w.r].c}">
+    <button class="mmain" data-open="${w.id}">
+      <span class="mroom">${opt.showTime ? `<b>${w.t}</b>` : ""}${esc(room)}</span>
+      <span class="mtitle"><bdi>${esc(F(w, "ti"))}</bdi></span>
+      ${by ? `<span class="mby"><bdi>${esc(by)}</bdi></span>` : ""}
+      <span class="micons">${icons}</span>
+    </button>
+    <button class="mstar${p ? " p" + p : ""}" data-fav="${w.id}" aria-label="${esc(aria)}">${p ? stars(p) : "☆"}</button>
+  </article>`;
+}
+const gridHtml = (list, opt) => list.length ? `<div class="cgrid">${list.map(w => miniHtml(w, opt)).join("")}</div>` : "";
+function slotHead(dayId, t, now){
+  const st = slotStatus(dayId, t, now);
+  const nFav = W.filter(x => x.d === dayId && x.t === t && x.r !== "main" && favs.has(x.id)).length;
+  return `<h3 class="slot" ${st ? `id="slot-now"` : ""}><span>${t}</span>`
+    + (st === "now" ? `<span class="pill now">${T.now}</span>` : st === "soon" ? `<span class="pill soon">${T.soon}</span>` : "")
+    + (nFav > 1 ? `<span class="pill clash">${T.slotClash(nFav)}</span>` : "")
+    + `</h3>`;
+}
+
 function renderDay(dayId){
   const now = nowInfo();
   const all = W.filter(w => w.d === dayId);
@@ -1153,18 +1219,16 @@ function renderDay(dayId){
   let h = a2hsHtml()
     + `<button class="pvbtn" data-poster="${dayId}"><img src="${POSTERS[dayId]}" alt="" loading="lazy"><span>🗓️ ${T.posterBtn(dn)}<small>${T.posterSub}</small></span></button>`
     + `<button class="note" data-act="info"><span class="dot"></span><span>${T.healing}</span></button>`;
-  let cur = null;
-  items.forEach(w => {
-    if (w.t !== cur){
-      cur = w.t;
-      const st = slotStatus(dayId, w.t, now);
-      const nFav = W.filter(x => x.d === dayId && x.t === w.t && x.r !== "main" && favs.has(x.id)).length;
-      h += `<h3 class="slot" ${st ? `id="slot-now"` : ""}><span>${w.t}</span>`
-        + (st === "now" ? `<span class="pill now">${T.now}</span>` : st === "soon" ? `<span class="pill soon">${T.soon}</span>` : "")
-        + (nFav > 1 ? `<span class="pill clash">${T.slotClash(nFav)}</span>` : "")
-        + `</h3>`;
+  const groups = [];
+  items.forEach(w => { const g = groups[groups.length-1]; if (g && g.t === w.t) g.items.push(w); else groups.push({t:w.t, items:[w]}); });
+  groups.forEach(g => {
+    h += slotHead(dayId, g.t, now);
+    if (viewMode === "grid"){
+      // festival-wide events stay full width; the workshops of the slot sit side by side
+      h += g.items.filter(w => w.r === "main").map(w => cardHtml(w)).join("") + gridHtml(g.items.filter(w => w.r !== "main"));
+    } else {
+      h += g.items.map(w => cardHtml(w)).join("");
     }
-    h += cardHtml(w);
   });
   if (hidden) h += `<p class="hidden-note">${T.hidden(hidden)} · <button class="linkbtn" data-act="resetfilt">${T.showAll}</button></p>`;
   h += `<p class="foot">${T.foot}</p>`;
@@ -1191,17 +1255,23 @@ function renderFav(){
     h += `<section class="daysec"><h2>${dayName(d)} ${d.date}</h2>`;
     const groups = [];
     dl.forEach(w => { const g = groups[groups.length-1]; if (g && g.t === w.t) g.items.push(w); else groups.push({t:w.t, items:[w]}); });
+    let buf = [];                                   // side-by-side view: non-clashing favorites share one grid
+    const flush = () => { h += gridHtml(buf, {showTime:true}); buf = []; };
     groups.forEach(g => {
       const ws = g.items.filter(w => w.r !== "main");
       if (ws.length > 1){
         const top = Math.max(...ws.map(w => lvl(w.id)));
         const tieTop = ws.filter(w => lvl(w.id) === top).length > 1;
+        if (viewMode === "grid") flush();
         h += `<div class="clashbox"><div class="cb-head">${T.cbHead(g.t, ws.length)}</div><div class="cb-sub">${tieTop ? T.cbSubTie : T.cbSub}</div>`
-          + g.items.map(w => cardHtml(w, {showTime:true, rank:true})).join("") + `</div>`;
+          + (viewMode === "grid" ? gridHtml(g.items) : g.items.map(w => cardHtml(w, {showTime:true, rank:true})).join("")) + `</div>`;
+      } else if (viewMode === "grid"){
+        buf.push(...g.items);
       } else {
         h += g.items.map(w => cardHtml(w, {showTime:true})).join("");
       }
     });
+    if (viewMode === "grid") flush();
     h += `</section>`;
   });
   h += `<div class="actions"><button class="btn" data-act="share">${T.share}</button><button class="btn ghost" data-act="import">${T.imp}</button><button class="btn ghost" data-act="clear">${T.clear}</button></div>`;
@@ -1269,7 +1339,8 @@ function renderMap(){
   else DAYS.forEach(d => {                       // all of the chakra's workshops, split by day inside the list
     const dl = items.filter(w => w.d === d.id);
     if (!dl.length) return;
-    h += `<h3 class="slot" id="rd-${d.id}"><span>${dayName(d)} ${d.date}</span></h3>` + dl.map(w => cardHtml(w, {showTime:true})).join("");
+    h += `<h3 class="slot" id="rd-${d.id}"><span>${dayName(d)} ${d.date}</span></h3>`
+      + (viewMode === "grid" ? gridHtml(dl, {showTime:true}) : dl.map(w => cardHtml(w, {showTime:true})).join(""));
   });
   return h + `</section>`;
 }
@@ -1448,7 +1519,7 @@ function infoHtml(){
     <h3>${he ? "דרגות מועדפים" : "Favorite ratings"}</h3>${pl}
     <p>${he ? "כל לחיצה על הכוכב מחליפה דרגה, ואחרי ★★★ חוזרים ל־★. כדי להוריד סדנה מהמועדפים לוחצים על ✕ הסרה שמתחת לכוכב. אפשר גם לבחור דרגה בתוך דף הסדנה. כשסימנתם כמה סדנאות באותה שעה, תראו מי הבחירה הראשונה ומי הגיבוי." : "Each tap on the star changes the rating; after ★★★ it goes back to ★. To remove a workshop, tap ✕ Remove under the star. You can also pick a rating inside the workshop page. When you star several workshops at the same time, you'll see which is your top pick and which are backups."}</p>
     <h3>${he ? "על הדף" : "About this page"}</h3>
-    <p>${he ? "מחליקים ימינה ושמאלה כדי לעבור בין הימים למועדפים. בתוך כרטיס של סדנה, החלקה או החיצים עוברים לסדנה הבאה או הקודמת ברשימה שממנה פתחתם אותו, וממשיכים גם ליום הבא או הקודם. בלשונית ״מפה״ לוחצים על צ׳אקרה כדי לראות את הסדנאות שבה, ומתוך כרטיס של סדנה לוחצים על המיקום כדי לראות אותו במפה. ״שיתוף״ שולח רשימה עם קוד, ומי שיש לו את הקובץ יכול לייבא אותה אצלו. הדף עובד גם בלי אינטרנט." : "Swipe left and right to move between days and favorites. Inside a workshop card, swipe or use the arrows to go to the next or previous workshop in the list you opened it from, continuing into the next or previous day. On the Map tab, tap a chakra to see its workshops; inside a workshop card, tap the location to see it on the map. “Share” sends a list with a code that anyone with this file can import. Works offline."}</p>
+    <p>${he ? "מחליקים ימינה ושמאלה כדי לעבור בין הימים למועדפים. בתוך כרטיס של סדנה, החלקה או החיצים עוברים לסדנה הבאה או הקודמת ברשימה שממנה פתחתם אותו, וממשיכים גם ליום הבא או הקודם. הכפתור ▦ / ☰ בראש הדף מחליף בכל האתר בין רשימה לבין תצוגה שבה הסדנאות של כל שעה מופיעות זו לצד זו. בלשונית ״מפה״ לוחצים על צ׳אקרה כדי לראות את הסדנאות שבה, ומתוך כרטיס של סדנה לוחצים על המיקום כדי לראות אותו במפה. ״שיתוף״ שולח רשימה עם קוד, ומי שיש לו את הקובץ יכול לייבא אותה אצלו. הדף עובד גם בלי אינטרנט." : "Swipe left and right to move between days and favorites. Inside a workshop card, swipe or use the arrows to go to the next or previous workshop in the list you opened it from, continuing into the next or previous day. The ▦ / ☰ button at the top switches the whole site between a list and a view where each time slot's workshops sit side by side. On the Map tab, tap a chakra to see its workshops; inside a workshop card, tap the location to see it on the map. “Share” sends a list with a code that anyone with this file can import. Works offline."}</p>
     <div class="sheet-foot"><button class="fullbtn" data-act="close">${T.close}</button></div>
   </div>`;
 }
@@ -1683,6 +1754,12 @@ document.addEventListener("click", e => {
     case "info": openSheet(infoHtml()); break;
     case "close": closeSheet(); break;
     case "lang": setLang(lang === "he" ? "en" : "he"); break;
+    case "view":
+      viewMode = viewMode === "grid" ? "list" : "grid";
+      store.set("lv19_view", viewMode);
+      renderHeader(); render(true);
+      toast(viewMode === "grid" ? T.viewNowGrid : T.viewNowList);
+      break;
     case "nocouples": filt.noCouples = !filt.noCouples; store.set(LS.filt, filt); render(true); break;
     case "mapfav": mapFavOnly = !mapFavOnly; store.set(LS.mapFav, mapFavOnly); render(true); break;
     case "pvclose": closePoster(); break;
