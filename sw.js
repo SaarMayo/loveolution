@@ -1,8 +1,8 @@
 /* Offline copy of the schedule.
    Pages: try the network briefly (fresh schedule), fall back to the saved copy when there's no reception.
    Everything else: saved copy first. Bump VERSION when publishing a new version of the files. */
-const VERSION = "lv19-v4";
-const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./favicon.png"];
+const VERSION = "lv19-v5";
+const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./favicon.png", "./map.jpg", "./poster-thu.jpg", "./poster-fri.jpg", "./poster-sat.jpg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
