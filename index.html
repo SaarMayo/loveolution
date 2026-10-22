@@ -42,7 +42,7 @@ button{font:inherit;color:inherit}
 .top-row > div:first-child{min-width:0}
 .top h1{margin:2px 0 0;font-size:24px;line-height:1.2}
 .top .sub{font-size:13px;opacity:.9;margin-top:2px}
-.hbtns{display:flex;gap:6px;flex:none}
+.hbtns{display:grid;grid-template-columns:auto auto;gap:6px;flex:none}
 .icon-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);
   background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:18px;font-style:italic;font-family:Georgia,serif;cursor:pointer}
 .icon-btn.lang{font-style:normal;font-family:inherit;font-size:14px}
@@ -319,10 +319,12 @@ textarea.ta{width:100%;min-height:150px;border:1px solid var(--line);border-radi
       <h1 id="hTitle">התוכנייה שלי</h1>
       <div class="sub"><span id="hPlace">פארק הירדן</span> · <span dir="ltr">22–24.10.2026</span></div>
     </div>
+    <!-- 2×2: language | info  /  full-day poster (under language) | view toggle (under info) -->
     <div class="hbtns">
-      <button class="icon-btn lang" id="viewBtn" data-act="view"></button>
       <button class="icon-btn lang" id="langBtn" data-act="lang">EN</button>
       <button class="icon-btn" id="infoBtn" data-act="info" aria-label="מקרא ומידע">i</button>
+      <button class="icon-btn lang" id="posterBtn" data-act="poster"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="1.5" y="2.5" width="15" height="14" rx="2"/><path d="M1.5 7h15M6.5 7v9.5M11.5 7v9.5M5.5 1v3M12.5 1v3" stroke-linecap="round"/></svg></button>
+      <button class="icon-btn lang" id="viewBtn" data-act="view"></button>
     </div>
   </div>
 </header>
@@ -508,7 +510,7 @@ he:{
   a2hsAndroid:"כך היא תיפתח כמו אפליקציה ותעבוד גם בלי קליטה בפארק. בכרום: תפריט ⋮ ← ״הוספה למסך הבית״ או ״התקנת אפליקציה״.",
   install:"התקנה", shareOpen:"התוכנייה:",
   viewToGrid:"תצוגה זו לצד זו", viewToList:"תצוגת רשימה", viewNowGrid:"▦ הסדנאות זו לצד זו", viewNowList:"☰ הסדנאות ברשימה",
-  posterBtn:d=>`הלוח המלא של יום ${d}`, posterSub:"כל הצ׳אקרות והשעות זו לצד זו, כמו בתוכנייה המקורית",
+  posterAria:"הלוח המלא של היום",
   posterHint:"הקישו על הלוח כדי להגדיל, ושוב כדי להקטין", posterAlt:d=>`לוח הסדנאות של יום ${d}`,
   mapTab:"🗺️ מפה", mapSub:"מתחמים", mapAlt:"מפת הפסטיבל", toMap:"במפה",
   mapHint:"לחצו על צ׳אקרה במפה כדי לראות את כל הסדנאות שבה, לפי ימים.",
@@ -570,7 +572,7 @@ en:{
   a2hsAndroid:"It will open like an app and work without reception at the park. In Chrome: menu ⋮ → “Add to Home screen” or “Install app”.",
   install:"Install", shareOpen:"Schedule:",
   viewToGrid:"Side-by-side view", viewToList:"List view", viewNowGrid:"▦ Workshops side by side", viewNowList:"☰ Workshops as a list",
-  posterBtn:d=>`Full ${d} poster`, posterSub:"All chakras and times side by side, as in the original schedule",
+  posterAria:"Full-day poster",
   posterHint:"Tap the poster to zoom in, tap again to zoom out", posterAlt:d=>`${d} workshop poster`,
   mapTab:"🗺️ Map", mapSub:"Areas", mapAlt:"Festival map", toMap:"on map",
   mapHint:"Tap a chakra on the map to see all of its workshops, by day.",
@@ -1158,6 +1160,8 @@ function renderHeader(){
     : `<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><rect x="1" y="2" width="16" height="3" rx="1.5"/><rect x="1" y="7.5" width="16" height="3" rx="1.5"/><rect x="1" y="13" width="16" height="3" rx="1.5"/></svg>`;
   $("#viewBtn").setAttribute("aria-label", toGrid ? T.viewToGrid : T.viewToList);
   $("#viewBtn").title = toGrid ? T.viewToGrid : T.viewToList;
+  $("#posterBtn").setAttribute("aria-label", T.posterAria);
+  $("#posterBtn").title = T.posterAria;
 }
 function renderTabs(){
   let h = DAYS.map(d => `<button class="tab${tab===d.id?" on":""}" data-tab="${d.id}"><b>${lang==="he"?d.he:d.enS}</b><small>${d.date}</small></button>`).join("");
@@ -1215,9 +1219,7 @@ function renderDay(dayId){
   const all = W.filter(w => w.d === dayId);
   const items = all.filter(pass).sort(cmp);
   const hidden = all.length - items.length;
-  const dn = dayName(dayOf(dayId));
   let h = a2hsHtml()
-    + `<button class="pvbtn" data-poster="${dayId}"><img src="${POSTERS[dayId]}" alt="" loading="lazy"><span>🗓️ ${T.posterBtn(dn)}<small>${T.posterSub}</small></span></button>`
     + `<button class="note" data-act="info"><span class="dot"></span><span>${T.healing}</span></button>`;
   const groups = [];
   items.forEach(w => { const g = groups[groups.length-1]; if (g && g.t === w.t) g.items.push(w); else groups.push({t:w.t, items:[w]}); });
@@ -1519,7 +1521,7 @@ function infoHtml(){
     <h3>${he ? "דרגות מועדפים" : "Favorite ratings"}</h3>${pl}
     <p>${he ? "כל לחיצה על הכוכב מחליפה דרגה, ואחרי ★★★ חוזרים ל־★. כדי להוריד סדנה מהמועדפים לוחצים על ✕ הסרה שמתחת לכוכב. אפשר גם לבחור דרגה בתוך דף הסדנה. כשסימנתם כמה סדנאות באותה שעה, תראו מי הבחירה הראשונה ומי הגיבוי." : "Each tap on the star changes the rating; after ★★★ it goes back to ★. To remove a workshop, tap ✕ Remove under the star. You can also pick a rating inside the workshop page. When you star several workshops at the same time, you'll see which is your top pick and which are backups."}</p>
     <h3>${he ? "על הדף" : "About this page"}</h3>
-    <p>${he ? "מחליקים ימינה ושמאלה כדי לעבור בין הימים למועדפים. בתוך כרטיס של סדנה, החלקה או החיצים עוברים לסדנה הבאה או הקודמת ברשימה שממנה פתחתם אותו, וממשיכים גם ליום הבא או הקודם. הכפתור ▦ / ☰ בראש הדף מחליף בכל האתר בין רשימה לבין תצוגה שבה הסדנאות של כל שעה מופיעות זו לצד זו. בלשונית ״מפה״ לוחצים על צ׳אקרה כדי לראות את הסדנאות שבה, ומתוך כרטיס של סדנה לוחצים על המיקום כדי לראות אותו במפה. ״שיתוף״ שולח רשימה עם קוד, ומי שיש לו את הקובץ יכול לייבא אותה אצלו. הדף עובד גם בלי אינטרנט." : "Swipe left and right to move between days and favorites. Inside a workshop card, swipe or use the arrows to go to the next or previous workshop in the list you opened it from, continuing into the next or previous day. The ▦ / ☰ button at the top switches the whole site between a list and a view where each time slot's workshops sit side by side. On the Map tab, tap a chakra to see its workshops; inside a workshop card, tap the location to see it on the map. “Share” sends a list with a code that anyone with this file can import. Works offline."}</p>
+    <p>${he ? "מחליקים ימינה ושמאלה כדי לעבור בין הימים למועדפים. בתוך כרטיס של סדנה, החלקה או החיצים עוברים לסדנה הבאה או הקודמת ברשימה שממנה פתחתם אותו, וממשיכים גם ליום הבא או הקודם. בראש הדף: כפתור ▦ / ☰ (מתחת ל־i) מחליף בכל האתר בין רשימה לבין תצוגה שבה הסדנאות של כל שעה מופיעות זו לצד זו, וכפתור הלוח (מתחת לבחירת השפה) פותח את הלוח המלא של היום, כמו בתוכנייה המקורית. בלשונית ״מפה״ לוחצים על צ׳אקרה כדי לראות את הסדנאות שבה, ומתוך כרטיס של סדנה לוחצים על המיקום כדי לראות אותו במפה. ״שיתוף״ שולח רשימה עם קוד, ומי שיש לו את הקובץ יכול לייבא אותה אצלו. הדף עובד גם בלי אינטרנט." : "Swipe left and right to move between days and favorites. Inside a workshop card, swipe or use the arrows to go to the next or previous workshop in the list you opened it from, continuing into the next or previous day. At the top: the ▦ / ☰ button (under i) switches the whole site between a list and a view where each time slot's workshops sit side by side, and the poster button (under the language button) opens the full-day poster, as in the original schedule. On the Map tab, tap a chakra to see its workshops; inside a workshop card, tap the location to see it on the map. “Share” sends a list with a code that anyone with this file can import. Works offline."}</p>
     <div class="sheet-foot"><button class="fullbtn" data-act="close">${T.close}</button></div>
   </div>`;
 }
@@ -1762,6 +1764,11 @@ document.addEventListener("click", e => {
       break;
     case "nocouples": filt.noCouples = !filt.noCouples; store.set(LS.filt, filt); render(true); break;
     case "mapfav": mapFavOnly = !mapFavOnly; store.set(LS.mapFav, mapFavOnly); render(true); break;
+    case "poster": {   // the day on screen; from ★ / map: today during the festival, otherwise Thursday
+      const now = nowInfo();
+      openPoster(DAYS.some(d => d.id === tab) ? tab : (now ? now.day : "thu"));
+      break;
+    }
     case "pvclose": closePoster(); break;
     case "pvin": stepPosterZoom(1); break;
     case "pvout": stepPosterZoom(-1); break;
