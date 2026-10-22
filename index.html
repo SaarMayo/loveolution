@@ -319,12 +319,12 @@ textarea.ta{width:100%;min-height:150px;border:1px solid var(--line);border-radi
       <h1 id="hTitle">התוכנייה שלי</h1>
       <div class="sub"><span id="hPlace">פארק הירדן</span> · <span dir="ltr">22–24.10.2026</span></div>
     </div>
-    <!-- 2×2: language | info  /  full-day poster (under language) | view toggle (under info) -->
+    <!-- 2×2: language | info  /  view toggle (under language) | full-day poster (under info) -->
     <div class="hbtns">
       <button class="icon-btn lang" id="langBtn" data-act="lang">EN</button>
       <button class="icon-btn" id="infoBtn" data-act="info" aria-label="מקרא ומידע">i</button>
-      <button class="icon-btn lang" id="posterBtn" data-act="poster"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="1.5" y="2.5" width="15" height="14" rx="2"/><path d="M1.5 7h15M6.5 7v9.5M11.5 7v9.5M5.5 1v3M12.5 1v3" stroke-linecap="round"/></svg></button>
       <button class="icon-btn lang" id="viewBtn" data-act="view"></button>
+      <button class="icon-btn lang" id="posterBtn" data-act="poster"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="1.5" y="2.5" width="15" height="14" rx="2"/><path d="M1.5 7h15M6.5 7v9.5M11.5 7v9.5M5.5 1v3M12.5 1v3" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </header>
@@ -1521,7 +1521,7 @@ function infoHtml(){
     <h3>${he ? "דרגות מועדפים" : "Favorite ratings"}</h3>${pl}
     <p>${he ? "כל לחיצה על הכוכב מחליפה דרגה, ואחרי ★★★ חוזרים ל־★. כדי להוריד סדנה מהמועדפים לוחצים על ✕ הסרה שמתחת לכוכב. אפשר גם לבחור דרגה בתוך דף הסדנה. כשסימנתם כמה סדנאות באותה שעה, תראו מי הבחירה הראשונה ומי הגיבוי." : "Each tap on the star changes the rating; after ★★★ it goes back to ★. To remove a workshop, tap ✕ Remove under the star. You can also pick a rating inside the workshop page. When you star several workshops at the same time, you'll see which is your top pick and which are backups."}</p>
     <h3>${he ? "על הדף" : "About this page"}</h3>
-    <p>${he ? "מחליקים ימינה ושמאלה כדי לעבור בין הימים למועדפים. בתוך כרטיס של סדנה, החלקה או החיצים עוברים לסדנה הבאה או הקודמת ברשימה שממנה פתחתם אותו, וממשיכים גם ליום הבא או הקודם. בראש הדף: כפתור ▦ / ☰ (מתחת ל־i) מחליף בכל האתר בין רשימה לבין תצוגה שבה הסדנאות של כל שעה מופיעות זו לצד זו, וכפתור הלוח (מתחת לבחירת השפה) פותח את הלוח המלא של היום, כמו בתוכנייה המקורית. בלשונית ״מפה״ לוחצים על צ׳אקרה כדי לראות את הסדנאות שבה, ומתוך כרטיס של סדנה לוחצים על המיקום כדי לראות אותו במפה. ״שיתוף״ שולח רשימה עם קוד, ומי שיש לו את הקובץ יכול לייבא אותה אצלו. הדף עובד גם בלי אינטרנט." : "Swipe left and right to move between days and favorites. Inside a workshop card, swipe or use the arrows to go to the next or previous workshop in the list you opened it from, continuing into the next or previous day. At the top: the ▦ / ☰ button (under i) switches the whole site between a list and a view where each time slot's workshops sit side by side, and the poster button (under the language button) opens the full-day poster, as in the original schedule. On the Map tab, tap a chakra to see its workshops; inside a workshop card, tap the location to see it on the map. “Share” sends a list with a code that anyone with this file can import. Works offline."}</p>
+    <p>${he ? "מחליקים ימינה ושמאלה כדי לעבור בין הימים למועדפים. בתוך כרטיס של סדנה, החלקה או החיצים עוברים לסדנה הבאה או הקודמת ברשימה שממנה פתחתם אותו, וממשיכים גם ליום הבא או הקודם. בראש הדף: כפתור ▦ / ☰ (מתחת לבחירת השפה) מחליף בכל האתר בין רשימה לבין תצוגה שבה הסדנאות של כל שעה מופיעות זו לצד זו, וכפתור הלוח (מתחת ל־i) פותח את הלוח המלא של היום, כמו בתוכנייה המקורית. בלשונית ״מפה״ לוחצים על צ׳אקרה כדי לראות את הסדנאות שבה, ומתוך כרטיס של סדנה לוחצים על המיקום כדי לראות אותו במפה. ״שיתוף״ שולח רשימה עם קוד, ומי שיש לו את הקובץ יכול לייבא אותה אצלו. הדף עובד גם בלי אינטרנט." : "Swipe left and right to move between days and favorites. Inside a workshop card, swipe or use the arrows to go to the next or previous workshop in the list you opened it from, continuing into the next or previous day. At the top: the ▦ / ☰ button (under the language button) switches the whole site between a list and a view where each time slot's workshops sit side by side, and the poster button (under i) opens the full-day poster, as in the original schedule. On the Map tab, tap a chakra to see its workshops; inside a workshop card, tap the location to see it on the map. “Share” sends a list with a code that anyone with this file can import. Works offline."}</p>
     <div class="sheet-foot"><button class="fullbtn" data-act="close">${T.close}</button></div>
   </div>`;
 }

@@ -1,7 +1,7 @@
 /* Offline copy of the schedule.
    Pages: try the network briefly (fresh schedule), fall back to the saved copy when there's no reception.
    Everything else: saved copy first. Bump VERSION when publishing a new version of the files. */
-const VERSION = "lv19-v8";
+const VERSION = "lv19-v9";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./favicon.png", "./map.jpg", "./poster-thu.jpg", "./poster-fri.jpg", "./poster-sat.jpg"];
 
 self.addEventListener("install", e => {
